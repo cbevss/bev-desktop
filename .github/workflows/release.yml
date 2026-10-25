@@ -1,0 +1,38 @@
+# Builds the Windows app on GitHub's own Windows computers and publishes it as a release.
+# How to release a new version of the app: change "version" in package.json, commit, then push a tag like v1.0.1
+# (or run this workflow by hand from the Actions tab). Website changes never need a new app version.
+name: Build and release the Windows app
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Test the link rules
+        run: npm test
+      - name: Build the installer and publish the release
+        run: npm run release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Keep a copy of the files
+        uses: actions/upload-artifact@v4
+        with:
+          name: bev-windows
+          path: |
+            dist/*.exe
+            dist/nsis-web/*
+            dist/*.yml
+          if-no-files-found: error

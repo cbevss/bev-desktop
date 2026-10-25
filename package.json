@@ -1,0 +1,49 @@
+{
+  "name": "bev-desktop",
+  "productName": "BEV",
+  "version": "1.0.0",
+  "description": "BEV for Windows: the BEV dashboard in its own window",
+  "author": "BEV <bevbotsupport@gmail.com>",
+  "homepage": "https://bevbotdiscord.com",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/routes.test.js",
+    "dist": "electron-builder --win --x64 --publish never",
+    "release": "electron-builder --win --x64 --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2"
+  },
+  "devDependencies": {
+    "electron": "^44.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.bevbotdiscord.desktop",
+    "productName": "BEV",
+    "copyright": "Copyright © BEV",
+    "files": ["main.js", "routes.js", "offline.html", "build/icon.png", "package.json"],
+    "directories": { "buildResources": "build", "output": "dist" },
+    "win": {
+      "target": [{ "target": "nsis-web", "arch": ["x64"] }],
+      "icon": "build/icon.ico",
+      "executableName": "BEV"
+    },
+    "nsisWeb": {
+      "artifactName": "BEV-Setup.${ext}",
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "BEV",
+      "uninstallDisplayName": "BEV",
+      "deleteAppDataOnUninstall": false,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "publish": [{ "provider": "github", "owner": "cbevss", "repo": "bev-desktop", "releaseType": "release" }]
+  }
+}
